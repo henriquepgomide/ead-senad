@@ -42,7 +42,7 @@ round(cor(socialPer[,24:64], method="kendal", use="complete.obs"),2) # kendall c
 cor.plot(cor(socialPer[,24:64], method="kendal", use="complete.obs"), numbers= TRUE)
 
 # alpha
-alpha(socialPer[,24:64])
+cronbach  <- alpha(socialPer[,24:64])
 
 # EFA ----
 
@@ -54,9 +54,8 @@ bartlett.test(socialPer[,24:64])
 
 str(socialPer[,24:64])
 
-
 # Defining factors
-fa.parallel(socialPer[,24:64], fm="pa") # yields 4 components
+fa.parallel(socialPer[,24:64], fm="pa", fa="pc", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
 VSS(socialPer[,24:64], rotate="none") # VSS = 3 factors MAP = 4 components
 
 # Principal components analysis
