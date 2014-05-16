@@ -1,0 +1,9 @@
+{
+    "path" : "~/ead-senad",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
