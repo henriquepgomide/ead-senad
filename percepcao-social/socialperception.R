@@ -32,7 +32,55 @@ socialPer$scaleSum  <- rowSums(socialPer[,24:65])
 ## Subset completed observations and consented participation
 socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado=="Finalizadas" & !is.na(socialPer$scaleSum))
 
+# Demographics
 
+## Age
+
+### Clean data
+idade  <- as.character(socialPer$idade)
+idade[24]  <- "42"
+socialPer$age  <- as.numeric(gsub("anos(.*)", "", idade)) 
+
+### Descriptives
+summary(socialPer$age) # all
+by(socialPer$age, socialPer$sexo, describe) #by sex
+
+## Sex
+cbind(round(prop.table(table(socialPer$sexo)),2))
+
+## Degree
+cbind(round(prop.table(table(socialPer$escolaridade)),2))
+
+## Marital Staus
+cbind(round(prop.table(table(socialPer$estadocivil)),2))
+
+## Education
+cbind(round(prop.table(table(socialPer$formacao)),2)) # Broken, needs manual recoding
+
+## Ocupação
+cbind(round(prop.table(table(socialPer$ocupacao)),2)) # Broken, needs manual recoding
+
+## Time  working
+timeWorking  <- as.character(socialPer$tempodeservico)
+socialPer$timeWorking  <- as.numeric(gsub("anos(.*)", "", timeWorking)) 
+describe(socialPer$timeWorking)
+
+## Religion 
+cbind(round(prop.table(table(socialPer$religiao)),2)) 
+
+## Contact 
+cbind(round(prop.table(table(socialPer$contato.tema)),2))  
+
+## Deal with
+cbind(round(prop.table(table(socialPer$lida.com)),2)) 
+
+## Where deal with
+cbind(round(prop.table(table(socialPer$onde.lida.com)),2))
+
+### Others
+table(socialPer$lida.com.outros)
+
+# Scale analysis ---
 # descriptives
 describe(socialPer[,24:65])
 
@@ -51,14 +99,14 @@ KMO(socialPer[,24:65])
 # Barlett test of homogeneity
 bartlett.test(socialPer[,24:65])
 
-str(socialPer[,24:65])
-
 # Defining factors
-fa.parallel(socialPer[,24:65], fm="pa", fa="pc", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
+fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components
 VSS(socialPer[,24:65], rotate="none") # VSS = 3 factors MAP = 4 components
 
 # Principal components analysis
-pca <- fa.poly(socialPer[,24:65], nfactors = 4, rotate = "oblimin", fm="pa")
+pca <- fa.poly(socialPer[,24:65], nfactors = 4, rotate = "oblimin", fm="minres")
+print.psych(pca, digits=2, cut=0.4)
 
-# Observing loadings
-print.psych(pca, cut = 0.3, sort = FALSE)
+# Diagrama
+fa.diagram(pca)
+

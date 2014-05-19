@@ -19,6 +19,7 @@ Resultados
 
 Os resultados são apresentados por tópicos: caracterização da amostra, avaliação descritiva da escala e análise fatorial exploratória.
 
+
 ### Bibliotecas
 ```{r}
 library(car) # Function Recode
@@ -29,6 +30,57 @@ socialPer$scaleSum  <- rowSums(socialPer[,24:64])
 ## Subset completed observations and consented participation
 socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado=="Finalizadas" & !is.na(socialPer$scaleSum))
 ```
+
+### Sócio-demográficas
+
+#### Idade
+```{r}
+summary(socialPer$age) # all
+by(socialPer$age, socialPer$sexo, describe) #by sex
+```
+
+#### Sexo
+```{r}
+cbind(round(prop.table(table(socialPer$sexo)),2))
+```
+
+#### Escolaridade
+```{r}
+cbind(round(prop.table(table(socialPer$escolaridade)),2))
+```
+
+#### Estado Civil
+```{r}
+cbind(round(prop.table(table(socialPer$estadocivil)),2))
+```
+
+#### Tempo de serviço
+```{r}
+timeWorking  <- as.character(socialPer$tempodeservico)
+socialPer$timeWorking  <- as.numeric(gsub("anos(.*)", "", timeWorking)) 
+describe(socialPer$timeWorking)
+```
+
+#### Religião
+```{r}
+cbind(round(prop.table(table(socialPer$religiao)),2)) 
+```
+
+#### Contato com o tema
+```{r}
+cbind(round(prop.table(table(socialPer$contato.tema)),2))  
+```
+
+#### Lida com
+```{r}
+cbind(round(prop.table(table(socialPer$lida.com)),2)) 
+```
+
+#### Onde lida com
+```{r}
+cbind(round(prop.table(table(socialPer$onde.lida.com)),2))
+```
+
 
 ### Apresentação dos itens da escala 
 
@@ -71,12 +123,18 @@ bartlett.test(socialPer[,24:65])
 
 ### Cattel's scree
 ```{r fig.width=10, fig.height=11}
-fa.parallel(socialPer[,24:65], fm="pa", fa="pc", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
+fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
 ```
 
 ### EFA - Principal component analysis
 
 ```{r}
 pca <- fa.poly(socialPer[,24:65], nfactors = 4, rotate = "oblimin")
-print.psych(pca, cut = 0.4, sort = FALSE)
+print.psych(pca, digits=2, cut=0.3)
 ```
+
+#### Diagrama com fatores
+```{r fig.width=20, fig.height=22}
+fa.diagram(pca)
+```
+
