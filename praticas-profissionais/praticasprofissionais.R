@@ -38,8 +38,8 @@ praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPr
 
 ### Clean data
 idade  <- as.character(praticasPro$idade)
-idade[9]  <- "35"; idade[43] <- "29"; idade[64]  <- "31" 
-praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade)) 
+idade[9]  <- "35"; idade[44] <- "29"; idade[69]  <- "31"; idade[111]   <-  42;
+praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade))
 
 ### Descriptives
 summary(praticasPro$age) # all
@@ -98,12 +98,17 @@ KMO(praticasPro[,24:66])
 bartlett.test(praticasPro[,24:66])
 
 # Defining factors
-fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 3 components and 4 factors
+fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components and 4 factors
 VSS(praticasPro[,24:66], rotate="none") # VSS = 2; MAP = 4 factors
 
 # Principal components analysis
 pca <- fa.poly(praticasPro[,24:66], nfactors = 4, rotate = "oblimin", fm="minres")
-print.psych(pca, digits=2, cut=0.4)
+print.psych(pca, digits=2, cut= .3)
 
 # Diagrama
 fa.diagram(pca)
+
+## Para classificar ----
+names(praticasPro)
+praticasPro$formacao; praticasPro$servico.atuacao; praticasPro$lida.com.outros; 
+table(praticasPro$formacao) #

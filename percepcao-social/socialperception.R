@@ -33,7 +33,6 @@ socialPer$scaleSum  <- rowSums(socialPer[,24:65])
 socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado=="Finalizadas" & !is.na(socialPer$scaleSum))
 
 # Demographics
-
 ## Age
 
 ### Clean data
@@ -104,7 +103,7 @@ fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues") # y
 VSS(socialPer[,24:65], rotate="none") # VSS = 3 factors MAP = 4 components
 
 # Principal components analysis
-pca <- fa.poly(socialPer[,24:65], nfactors = 4, rotate = "oblimin", fm="minres")
+pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "oblimin", fm="minres")
 print.psych(pca, digits=2, cut=0.4)
 
 # Diagrama

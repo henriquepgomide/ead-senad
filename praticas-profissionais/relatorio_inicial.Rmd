@@ -7,7 +7,7 @@ O instrumento está sendo validado para população de educadores. O objetivo da
 
 Durante todo o processo de desenvolvimento, foram utilizadas ferramentas de código-aberto, para facilitar o re-uso das técnicas e procedimentos desenvolvidos. Todo conteúdo do instrumento e de suas etapas estará disponível para o público no repositório (http://github.com/crepeia/ead-senad). Atualmente, o projeto está hospedado no repositório (http://github.com/henriquepgomide/ead-senad). 
 
-Neste relatório são apresentadas, análises da escala com base em uma amostra de 141 educadores-tutores do curso. As análises foram conduzidas através da linguagem de programação R usando os pacotes *car* e *psych*. 
+Neste relatório são apresentadas, análises da escala com base em uma amostra de 136 educadores-tutores do curso. As análises foram conduzidas através da linguagem de programação R usando os pacotes *car* e *psych*. 
 
 Banco de Dados
 -------------------------
@@ -37,8 +37,8 @@ praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPr
 #### Idade
 ```{r}
 idade  <- as.character(praticasPro$idade)
-idade[9]  <- "35"; idade[43] <- "29"; idade[64]  <- "31" 
-praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade)) 
+idade[9]  <- "35"; idade[44] <- "29"; idade[69]  <- "31"; idade[111]   <-  42;
+praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade))
 summary(praticasPro$age) # all
 by(praticasPro$age, praticasPro$sexo, describe) #by sex
 
@@ -135,7 +135,7 @@ fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") #
 
 ```{r}
 pca <- fa.poly(praticasPro[,24:66], nfactors = 4, rotate = "oblimin", fm="minres")
-print.psych(pca, digits=2, cut=0.4)
+print.psych(pca, digits=2, cut=0.3)
 ```
 
 #### Diagrama com fatores

@@ -533,7 +533,7 @@ fa.parallel(socialPer[, 24:65], fm = "minres", fa = "both", ylabel = "Eigenvalue
 
 
 ```r
-pca <- fa.poly(socialPer[, 24:65], nfactors = 4, rotate = "oblimin")
+pca <- fa.poly(socialPer[, 24:65], nfactors = 2, rotate = "oblimin")
 ```
 
 ```
@@ -555,87 +555,85 @@ print.psych(pca, digits = 2, cut = 0.3)
 
 ```
 ## Factor Analysis using method =  minres
-## Call: fa.poly(x = socialPer[, 24:65], nfactors = 4, rotate = "oblimin")
+## Call: fa.poly(x = socialPer[, 24:65], nfactors = 2, rotate = "oblimin")
 ## Standardized loadings (pattern matrix) based upon correlation matrix
-##         MR1   MR2   MR4   MR3   h2   u2 com
-## ps001        0.70             0.59 0.41 1.1
-## ps002        0.54             0.37 0.63 1.5
-## ps003        0.49       -0.30 0.41 0.59 1.7
-## ps004        0.68             0.65 0.35 1.3
-## ps005        0.87             0.70 0.30 1.1
-## ps006        0.79             0.70 0.30 1.1
-## ps007        0.81             0.71 0.29 1.0
-## ps008        0.58             0.45 0.55 1.5
-## ps009                    0.67 0.51 0.49 1.5
-## ps010        0.45             0.29 0.71 1.8
-## ps011        0.59             0.40 0.60 1.6
-## ps012  0.55                   0.35 0.65 1.1
-## ps013  0.50                   0.43 0.57 1.4
-## ps014                    0.50 0.33 0.67 1.8
-## ps015 -0.64  0.35             0.45 0.55 1.8
-## ps016  0.36  0.41             0.40 0.60 2.0
-## ps017  0.86                   0.75 0.25 1.2
-## ps018        0.54             0.40 0.60 1.6
-## ps019  0.45  0.36             0.42 0.58 2.4
-## ps020  0.57                   0.46 0.54 2.0
-## ps021              0.36       0.18 0.82 1.8
-## ps022        0.41             0.29 0.71 1.8
-## ps023             -0.55       0.34 0.66 1.4
-## ps024              0.40  0.32 0.31 0.69 2.1
-## ps025        0.48             0.34 0.66 1.7
-## ps026  0.73                   0.67 0.33 1.1
-## ps027  0.65             -0.33 0.62 0.38 1.5
-## ps028  0.47             -0.45 0.49 0.51 2.6
-## ps029  0.59                   0.58 0.42 1.4
-## ps030  0.72                   0.64 0.36 1.1
-## ps031 -0.40        0.33       0.31 0.69 2.0
-## ps032 -0.67                   0.62 0.38 1.3
-## ps033  0.35             -0.45 0.59 0.41 2.6
-## ps034              0.64       0.53 0.47 1.6
-## ps035              0.47       0.41 0.59 1.8
-## ps036              0.32  0.41 0.47 0.53 2.6
-## ps037              0.38  0.31 0.42 0.58 2.7
-## ps038 -0.31              0.59 0.61 0.39 1.8
-## ps039                   -0.46 0.43 0.57 1.9
-## ps040  0.41       -0.51       0.59 0.41 2.4
-## ps041             -0.67       0.54 0.46 1.3
-## ps042  0.31             -0.39 0.46 0.54 2.6
+##         MR1   MR2   h2   u2 com
+## ps001        0.66 0.54 0.46 1.1
+## ps002        0.62 0.34 0.66 1.1
+## ps003        0.61 0.39 0.61 1.0
+## ps004        0.58 0.55 0.45 1.4
+## ps005        0.80 0.60 0.40 1.0
+## ps006        0.69 0.57 0.43 1.1
+## ps007        0.79 0.66 0.34 1.0
+## ps008        0.53 0.35 0.65 1.1
+## ps009  0.32 -0.40 0.15 0.85 1.9
+## ps010             0.18 0.82 1.8
+## ps011        0.58 0.28 0.72 1.1
+## ps012  0.49       0.29 0.71 1.1
+## ps013  0.51       0.42 0.58 1.4
+## ps014       -0.39 0.13 0.87 1.2
+## ps015 -0.68       0.37 0.63 1.3
+## ps016        0.42 0.35 0.65 1.7
+## ps017  0.61       0.44 0.56 1.1
+## ps018        0.67 0.39 0.61 1.1
+## ps019        0.37 0.28 0.72 1.8
+## ps020             0.23 0.77 2.0
+## ps021 -0.39       0.13 0.87 1.5
+## ps022        0.52 0.28 0.72 1.0
+## ps023  0.41       0.14 0.86 1.6
+## ps024             0.12 0.88 1.2
+## ps025        0.61 0.33 0.67 1.0
+## ps026  0.75       0.63 0.37 1.0
+## ps027  0.62       0.52 0.48 1.2
+## ps028        0.37 0.27 0.73 1.7
+## ps029  0.64       0.57 0.43 1.2
+## ps030  0.69       0.59 0.41 1.1
+## ps031 -0.60       0.31 0.69 1.1
+## ps032 -0.71       0.59 0.41 1.1
+## ps033  0.37  0.47 0.50 0.50 1.9
+## ps034 -0.41       0.19 0.81 1.0
+## ps035 -0.61       0.35 0.65 1.0
+## ps036 -0.39       0.33 0.67 1.8
+## ps037 -0.53       0.32 0.68 1.0
+## ps038 -0.47       0.37 0.63 1.5
+## ps039        0.37 0.31 0.69 1.9
+## ps040  0.74       0.51 0.49 1.0
+## ps041  0.67       0.37 0.63 1.3
+## ps042        0.44 0.39 0.61 1.7
 ## 
-##                        MR1  MR2  MR4  MR3
-## SS loadings           6.84 6.71 3.32 3.34
-## Proportion Var        0.16 0.16 0.08 0.08
-## Cumulative Var        0.16 0.32 0.40 0.48
-## Proportion Explained  0.34 0.33 0.16 0.17
-## Cumulative Proportion 0.34 0.67 0.83 1.00
+##                        MR1  MR2
+## SS loadings           8.08 7.56
+## Proportion Var        0.19 0.18
+## Cumulative Var        0.19 0.37
+## Proportion Explained  0.52 0.48
+## Cumulative Proportion 0.52 1.00
 ## 
 ##  With factor correlations of 
-##       MR1   MR2   MR4   MR3
-## MR1  1.00  0.40 -0.25 -0.16
-## MR2  0.40  1.00 -0.14 -0.23
-## MR4 -0.25 -0.14  1.00  0.12
-## MR3 -0.16 -0.23  0.12  1.00
+##      MR1  MR2
+## MR1 1.00 0.44
+## MR2 0.44 1.00
 ## 
-## Mean item complexity =  1.7
-## Test of the hypothesis that 4 factors are sufficient.
+## Mean item complexity =  1.3
+## Test of the hypothesis that 2 factors are sufficient.
 ## 
 ## The degrees of freedom for the null model are  861  and the objective function was  89.36 with Chi Square of  11185
-## The degrees of freedom for the model are 699  and the objective function was  72.36 
+## The degrees of freedom for the model are 778  and the objective function was  75.25 
 ## 
-## The root mean square of the residuals (RMSR) is  0.07 
-## The df corrected root mean square of the residuals is  0.08 
+## The root mean square of the residuals (RMSR) is  0.09 
+## The df corrected root mean square of the residuals is  0.09 
 ## 
-## The harmonic number of observations is  141 with the empirical chi square  1198  with prob <  8e-29 
-## The total number of observations was  141  with MLE Chi Square =  8864  with prob <  0 
+## The harmonic number of observations is  141 with the empirical chi square  1934  with prob <  1e-99 
+## The total number of observations was  141  with MLE Chi Square =  9319  with prob <  0 
 ## 
-## Tucker Lewis Index of factoring reliability =  0.003
-## RMSEA index =  0.31  and the 90 % confidence intervals are  0.282 0.293
-## BIC =  5404
-## Fit based upon off diagonal values = 0.94
+## Tucker Lewis Index of factoring reliability =  0.074
+## RMSEA index =  0.299  and the 90 % confidence intervals are  0.274 0.284
+## BIC =  5469
+## Fit based upon off diagonal values = 0.91
 ## Measures of factor score adequacy             
-##                                                MR1 MR2 MR4 MR3
-## Correlation of scores with factors               1   1   1   1
-## Multiple R square of scores with factors         1   1   1   1
-## Minimum correlation of possible factor scores    1   1   1   1
+##                                                MR1 MR2
+## Correlation of scores with factors               1   1
+## Multiple R square of scores with factors         1   1
+## Minimum correlation of possible factor scores    1   1
 ```
 
 

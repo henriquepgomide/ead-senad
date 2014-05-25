@@ -129,7 +129,7 @@ fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues", sho
 ### EFA - Principal component analysis
 
 ```{r}
-pca <- fa.poly(socialPer[,24:65], nfactors = 4, rotate = "oblimin")
+pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "oblimin")
 print.psych(pca, digits=2, cut=0.3)
 ```
 
