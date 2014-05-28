@@ -1,7 +1,7 @@
 # Libraries ----
 library(car) # Function Recode
 library(psych) # Function Describe
-
+library(mirt) 
 # Import data ----
 
 ## Var names
@@ -109,3 +109,5 @@ print.psych(pca, digits=2, cut=0.4)
 # Diagrama
 fa.diagram(pca)
 
+#Confirmatoria
+cfa <- bfactor(socialPer[,24:65])
