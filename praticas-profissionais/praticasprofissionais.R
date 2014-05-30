@@ -98,11 +98,11 @@ KMO(praticasPro[,24:66])
 bartlett.test(praticasPro[,24:66])
 
 # Defining factors
-fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components and 4 factors
+auto  <- fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components and 4 factors
 VSS(praticasPro[,24:66], rotate="none") # VSS = 2; MAP = 4 factors
 
 # Principal components analysis
-pca <- fa.poly(praticasPro[,24:66], nfactors = 4, rotate = "oblimin", fm="minres")
+pca <- fa.poly(praticasPro[,24:66], nfactors = 2, rotate = "oblimin", fm="minres")
 print.psych(pca, digits=2, cut= .3)
 
 # Diagrama
@@ -112,3 +112,5 @@ fa.diagram(pca)
 names(praticasPro)
 praticasPro$formacao; praticasPro$servico.atuacao; praticasPro$lida.com.outros; 
 table(praticasPro$formacao) #
+
+## Retirar os itens que não pontuaram nas escalas 3,8,36,41.

@@ -39,6 +39,7 @@ socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado
 idade  <- as.character(socialPer$idade)
 idade[24]  <- "42"
 socialPer$age  <- as.numeric(gsub("anos(.*)", "", idade)) 
+describe(socialPer$age)
 
 ### Descriptives
 summary(socialPer$age) # all
@@ -103,9 +104,14 @@ fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues") # y
 VSS(socialPer[,24:65], rotate="none") # VSS = 3 factors MAP = 4 components
 
 # Principal components analysis
-pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "oblimin", fm="minres")
-print.psych(pca, digits=2, cut=0.4)
+pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "none", fm="minres")
+print.psych(pca, digits=2, cut=0.3)
 
 # Diagrama
 fa.diagram(pca)
+
+
+# Fazer EFA com rotação e sem rotação - tirando os itens 10,20,24.
+# Ver itens que estão polarizando nas respostas pela escala
+# REvista de validação de São Francisco
 
