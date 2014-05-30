@@ -110,11 +110,13 @@ print.psych(pca, digits=2, cut=0.3)
 # Diagrama
 fa.diagram(pca)
 
-
+<<<<<<< HEAD
 #Confirmatoria
 cfa <- bfactor(socialPer[,24:65])
+=======
 
 # Fazer EFA com rotação e sem rotação - tirando os itens 10,20,24.
 # Ver itens que estão polarizando nas respostas pela escala
 # REvista de validação de São Francisco
 
+>>>>>>> 9735c037ed1787543eee26c8973cc2670db11225
