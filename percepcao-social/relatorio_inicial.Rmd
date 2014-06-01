@@ -92,19 +92,20 @@ print(questions[1:42,1], type="html", justify = "left" )
 ### Itens
 
 ```{r}
-describe(socialPer[,24:65], skew=FALSE)
+fullScale  <- socialPer[,24:65]
+describe(fullScale, skew=FALSE)
 ```
 
 
 ### Correlation Matrix
 ```{r fig.width=20, fig.height=22}
-cor.plot(cor(socialPer[,24:65], method="kendal", use="complete.obs"), numbers= TRUE)
+cor.plot(cor(fullScale, method="kendal", use="complete.obs"), numbers= TRUE)
 ```
 
 
 ### Crobach's alfa
 ```{r}
-alpha(socialPer[,24:65])
+alpha(fullScale)
 ```
 
 Análise Fatorial
@@ -112,29 +113,39 @@ Análise Fatorial
 
 ### KMO - Adequação da amostra
 ```{r}
-KMO(socialPer[,24:65])
+KMO(fullScale)
 ```
 
 
 ### Esfericidade
 ```{r}
-bartlett.test(socialPer[,24:65])
+bartlett.test(fullScale)
 ```
 
 ### Cattel's scree
 ```{r fig.width=10, fig.height=11}
-fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
+fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues", show.legend=FALSE) # yields 4 components
 ```
 
 ### EFA - Principal component analysis
+### Versão com todos itens
 
 ```{r}
-pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "oblimin")
-print.psych(pca, digits=2, cut=0.3)
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin")
+print.psych(faAll, digits=2, cut=0.3)
+```
+
+### Versão com itens com melhor carga fatorial
+```{r}
+# V1 - Version
+v1Scale  <- subset(fullScale, select = -c(10,20,24))
+# Factor analysis using polychoric correlations
+fav1 <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(fav1, digits=2, cut=0.3)
 ```
 
 #### Diagrama com fatores
 ```{r fig.width=20, fig.height=22}
-fa.diagram(pca)
+fa.diagram(fav1)
 ```
 

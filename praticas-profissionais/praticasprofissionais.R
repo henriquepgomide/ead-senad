@@ -16,19 +16,19 @@ for (i in 30:72){
   praticasPro[,i]   <-  Recode(praticasPro[,i], "'Concordo'=4 ; c('Concordo totalmente', 'Concordo Totalmente')=5 ; 'Discordo' = 2; c('Discordo totalmente','Discordo Totalmente') = 1;  'Nem discordo, nem concordo' = 3")                         
 }
 
-praticasPro  <- subset(praticasPro, select = -c(1,2,3,6,11,12,13))
+praticasPro  <- subset(praticasPro, select = -c(1,2,3,4,5,6,11,12,13,14))
 write.csv(praticasPro, "praticasprofissionais_df.csv")
 
 # Questions - not implemented yet.
 # questions  <- read.csv("percepcaosocial_questions.csv")
 
 # Analysis----
-names(praticasPro)
 
 ## Import dataframe
 praticasPro  <- read.csv("praticasprofissionais_df.csv")
+
 ## Summing scales to remove NA's
-praticasPro$scaleSum  <- rowSums(praticasPro[,24:66])
+praticasPro$scaleSum  <- rowSums(praticasPro[,21:63])
 ## Subset completed observations and consented participation
 praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPro$estado=="Finalizadas" & !is.na(praticasPro$scaleSum))
 
@@ -37,6 +37,7 @@ praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPr
 ## Age
 
 ### Clean data
+
 idade  <- as.character(praticasPro$idade)
 idade[9]  <- "35"; idade[44] <- "29"; idade[69]  <- "31"; idade[111]   <-  42;
 praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade))
@@ -78,39 +79,48 @@ cbind(round(prop.table(table(praticasPro$lida.com)),2))
 cbind(round(prop.table(table(praticasPro$onde.lida.com)),2))
 
 # Scale analysis ---
+
+# Full scale
+fullScale  <- praticasPro[,21:63]
+
 # descriptives
-describe(praticasPro[,24:66])
+describe(fullScale)
 
 # correlations
-round(cor(praticasPro[,24:66], method="kendal", use="complete.obs"),2) # kendall correlation coef
-cor.plot(cor(praticasPro[,24:66], method="kendal", use="complete.obs"), numbers= TRUE)
+round(cor(fullScale, method="kendal", use="complete.obs"),2) # kendall correlation coef
+cor.plot(cor(fullScale, method="kendal", use="complete.obs"), numbers= TRUE)
 
 # alpha
-cronbach  <- alpha(praticasPro[,24:66])
+cronbach  <- alpha(fullScale)
 cronbach
 
 # EFA ----
 
+## All items ----
+
 ## KMO
-KMO(praticasPro[,24:66])
+KMO(fullScale)
 
 # Barlett test of homogeneity
-bartlett.test(praticasPro[,24:66])
+bartlett.test(fullScale)
 
 # Defining factors
-auto  <- fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components and 4 factors
-VSS(praticasPro[,24:66], rotate="none") # VSS = 2; MAP = 4 factors
+auto  <- fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components and 4 factors
+VSS(fullScale, rotate="none") # VSS = 2; MAP = 4 factors
 
-# Principal components analysis
-pca <- fa.poly(praticasPro[,24:66], nfactors = 2, rotate = "oblimin", fm="minres")
-print.psych(pca, digits=2, cut= .3)
+# Factor Analysis using polychoric correlations
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(faAll, digits=2, cut= .3)
 
-# Diagrama
-fa.diagram(pca)
 
-## Para classificar ----
-names(praticasPro)
-praticasPro$formacao; praticasPro$servico.atuacao; praticasPro$lida.com.outros; 
-table(praticasPro$formacao) #
+## V1 - Items with good loadings ----
+# V1 - Version
+v1Scale  <- subset(fullScale, select = -c(3,8,15,31,36,41))
 
-## Retirar os itens que não pontuaram nas escalas 3,8,36,41.
+# Factor analysis using polychoric correlations
+fav1 <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(fav1, digits=2, cut=0.3)
+
+# Diagram
+fa.diagram(fav1)
+

@@ -118,7 +118,7 @@ socialPer$timeWorking <- as.numeric(gsub("anos(.*)", "", timeWorking))
 ```
 
 ```
-## Warning: NAs introduced by coercion
+## Warning: NAs introduzidos por coerção
 ```
 
 ```r
@@ -249,7 +249,8 @@ print(questions[1:42, 1], type = "html", justify = "left")
 
 
 ```r
-describe(socialPer[, 24:65], skew = FALSE)
+fullScale <- socialPer[, 24:65]
+describe(fullScale, skew = FALSE)
 ```
 
 ```
@@ -303,7 +304,7 @@ describe(socialPer[, 24:65], skew = FALSE)
 ### Correlation Matrix
 
 ```r
-cor.plot(cor(socialPer[, 24:65], method = "kendal", use = "complete.obs"), numbers = TRUE)
+cor.plot(cor(fullScale, method = "kendal", use = "complete.obs"), numbers = TRUE)
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
@@ -313,7 +314,7 @@ cor.plot(cor(socialPer[, 24:65], method = "kendal", use = "complete.obs"), numbe
 ### Crobach's alfa
 
 ```r
-alpha(socialPer[, 24:65])
+alpha(fullScale)
 ```
 
 ```
@@ -324,7 +325,7 @@ alpha(socialPer[, 24:65])
 ```
 ## 
 ## Reliability analysis   
-## Call: alpha(x = socialPer[, 24:65])
+## Call: alpha(x = fullScale)
 ## 
 ##   raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd
 ##       0.91      0.91    0.95       0.2  10 0.014  2.3 0.43
@@ -475,12 +476,12 @@ Análise Fatorial
 ### KMO - Adequação da amostra
 
 ```r
-KMO(socialPer[, 24:65])
+KMO(fullScale)
 ```
 
 ```
 ## Kaiser-Meyer-Olkin factor adequacy
-## Call: KMO(r = socialPer[, 24:65])
+## Call: KMO(r = fullScale)
 ## Overall MSA =  0.82
 ## MSA for each item = 
 ## ps001 ps002 ps003 ps004 ps005 ps006 ps007 ps008 ps009 ps010 ps011 ps012 
@@ -498,14 +499,14 @@ KMO(socialPer[, 24:65])
 ### Esfericidade
 
 ```r
-bartlett.test(socialPer[, 24:65])
+bartlett.test(fullScale)
 ```
 
 ```
 ## 
 ## 	Bartlett test of homogeneity of variances
 ## 
-## data:  socialPer[, 24:65]
+## data:  fullScale
 ## Bartlett's K-squared = 327.7, df = 41, p-value < 2.2e-16
 ```
 
@@ -513,8 +514,7 @@ bartlett.test(socialPer[, 24:65])
 ### Cattel's scree
 
 ```r
-fa.parallel(socialPer[, 24:65], fm = "minres", fa = "both", ylabel = "Eigenvalues", 
-    show.legend = FALSE)  # yields 4 components
+fa.parallel(fullScale, fm = "minres", fa = "both", ylabel = "Eigenvalues", show.legend = FALSE)  # yields 4 components
 ```
 
 ```
@@ -530,10 +530,11 @@ fa.parallel(socialPer[, 24:65], fm = "minres", fa = "both", ylabel = "Eigenvalue
 
 
 ### EFA - Principal component analysis
+### Versão com todos itens
 
 
 ```r
-pca <- fa.poly(socialPer[, 24:65], nfactors = 2, rotate = "oblimin")
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin")
 ```
 
 ```
@@ -550,12 +551,12 @@ pca <- fa.poly(socialPer[, 24:65], nfactors = 2, rotate = "oblimin")
 ```
 
 ```r
-print.psych(pca, digits = 2, cut = 0.3)
+print.psych(faAll, digits = 2, cut = 0.3)
 ```
 
 ```
 ## Factor Analysis using method =  minres
-## Call: fa.poly(x = socialPer[, 24:65], nfactors = 2, rotate = "oblimin")
+## Call: fa.poly(x = fullScale, nfactors = 2, rotate = "oblimin")
 ## Standardized loadings (pattern matrix) based upon correlation matrix
 ##         MR1   MR2   h2   u2 com
 ## ps001        0.66 0.54 0.46 1.1
@@ -616,19 +617,121 @@ print.psych(pca, digits = 2, cut = 0.3)
 ## Mean item complexity =  1.3
 ## Test of the hypothesis that 2 factors are sufficient.
 ## 
-## The degrees of freedom for the null model are  861  and the objective function was  89.36 with Chi Square of  11185
-## The degrees of freedom for the model are 778  and the objective function was  75.25 
+## The degrees of freedom for the null model are  861  and the objective function was  89.37 with Chi Square of  11186
+## The degrees of freedom for the model are 778  and the objective function was  75.24 
 ## 
 ## The root mean square of the residuals (RMSR) is  0.09 
 ## The df corrected root mean square of the residuals is  0.09 
 ## 
 ## The harmonic number of observations is  141 with the empirical chi square  1934  with prob <  1e-99 
-## The total number of observations was  141  with MLE Chi Square =  9319  with prob <  0 
+## The total number of observations was  141  with MLE Chi Square =  9317  with prob <  0 
 ## 
 ## Tucker Lewis Index of factoring reliability =  0.074
 ## RMSEA index =  0.299  and the 90 % confidence intervals are  0.274 0.284
-## BIC =  5469
+## BIC =  5467
 ## Fit based upon off diagonal values = 0.91
+## Measures of factor score adequacy             
+##                                                MR1 MR2
+## Correlation of scores with factors               1   1
+## Multiple R square of scores with factors         1   1
+## Minimum correlation of possible factor scores    1   1
+```
+
+
+### Versão com itens com melhor carga fatorial
+
+```r
+# V1 - Version
+v1Scale <- subset(fullScale, select = -c(10, 20, 24))
+# Factor analysis using polychoric correlations
+fav1 <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm = "minres")
+```
+
+```
+## The items do not have an equal number of response alternatives, global set to FALSE
+```
+
+```
+## Warning: Matrix was not positive definite, smoothing was done
+```
+
+```r
+print.psych(fav1, digits = 2, cut = 0.3)
+```
+
+```
+## Factor Analysis using method =  minres
+## Call: fa.poly(x = v1Scale, nfactors = 2, rotate = "oblimin", fm = "minres")
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##         MR1   MR2   h2   u2 com
+## ps001        0.66 0.54 0.46 1.1
+## ps002        0.61 0.33 0.67 1.1
+## ps003        0.62 0.39 0.61 1.0
+## ps004        0.59 0.55 0.45 1.4
+## ps005        0.80 0.60 0.40 1.0
+## ps006        0.70 0.58 0.42 1.1
+## ps007        0.79 0.67 0.33 1.0
+## ps008        0.52 0.35 0.65 1.1
+## ps009  0.33 -0.42 0.16 0.84 1.9
+## ps011        0.55 0.25 0.75 1.1
+## ps012  0.50       0.29 0.71 1.1
+## ps013  0.51       0.41 0.59 1.4
+## ps014       -0.40 0.13 0.87 1.2
+## ps015 -0.68       0.37 0.63 1.3
+## ps016        0.42 0.35 0.65 1.7
+## ps017  0.62       0.44 0.56 1.0
+## ps018        0.66 0.39 0.61 1.1
+## ps019        0.36 0.28 0.72 1.8
+## ps021 -0.40       0.13 0.87 1.4
+## ps022        0.52 0.28 0.72 1.0
+## ps023  0.42       0.14 0.86 1.5
+## ps025        0.61 0.34 0.66 1.0
+## ps026  0.76       0.64 0.36 1.0
+## ps027  0.62       0.53 0.47 1.2
+## ps028        0.38 0.27 0.73 1.6
+## ps029  0.63       0.56 0.44 1.2
+## ps030  0.69       0.59 0.41 1.1
+## ps031 -0.60       0.31 0.69 1.1
+## ps032 -0.71       0.59 0.41 1.1
+## ps033  0.36  0.49 0.52 0.48 1.8
+## ps034 -0.39       0.18 0.82 1.1
+## ps035 -0.60       0.34 0.66 1.0
+## ps036 -0.38       0.33 0.67 1.9
+## ps037 -0.52       0.32 0.68 1.1
+## ps038 -0.46       0.38 0.62 1.6
+## ps039        0.39 0.32 0.68 1.8
+## ps040  0.74       0.51 0.49 1.0
+## ps041  0.67       0.36 0.64 1.3
+## ps042        0.45 0.40 0.60 1.7
+## 
+##                        MR1  MR2
+## SS loadings           7.75 7.39
+## Proportion Var        0.20 0.19
+## Cumulative Var        0.20 0.39
+## Proportion Explained  0.51 0.49
+## Cumulative Proportion 0.51 1.00
+## 
+##  With factor correlations of 
+##      MR1  MR2
+## MR1 1.00 0.44
+## MR2 0.44 1.00
+## 
+## Mean item complexity =  1.3
+## Test of the hypothesis that 2 factors are sufficient.
+## 
+## The degrees of freedom for the null model are  741  and the objective function was  58.43 with Chi Square of  7372
+## The degrees of freedom for the model are 664  and the objective function was  44.77 
+## 
+## The root mean square of the residuals (RMSR) is  0.09 
+## The df corrected root mean square of the residuals is  0.09 
+## 
+## The harmonic number of observations is  141 with the empirical chi square  1599  with prob <  7.2e-79 
+## The total number of observations was  141  with MLE Chi Square =  5589  with prob <  0 
+## 
+## Tucker Lewis Index of factoring reliability =  0.161
+## RMSEA index =  0.246  and the 90 % confidence intervals are  0.224 0.235
+## BIC =  2303
+## Fit based upon off diagonal values = 0.92
 ## Measures of factor score adequacy             
 ##                                                MR1 MR2
 ## Correlation of scores with factors               1   1
@@ -640,9 +743,9 @@ print.psych(pca, digits = 2, cut = 0.3)
 #### Diagrama com fatores
 
 ```r
-fa.diagram(pca)
+fa.diagram(fav1)
 ```
 
-![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
+![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
 
 

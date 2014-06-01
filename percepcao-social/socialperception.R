@@ -37,7 +37,7 @@ socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado
 
 ### Clean data
 idade  <- as.character(socialPer$idade)
-idade[24]  <- "42"
+idade[28]  <- "42"
 socialPer$age  <- as.numeric(gsub("anos(.*)", "", idade)) 
 describe(socialPer$age)
 
@@ -81,40 +81,50 @@ cbind(round(prop.table(table(socialPer$onde.lida.com)),2))
 table(socialPer$lida.com.outros)
 
 # Scale analysis ---
+
+# Full scale
+fullScale  <- socialPer[,24:65]
+
 # descriptives
-describe(socialPer[,24:65])
+describe(fullScale)
 
 # correlations
-round(cor(socialPer[,24:65], method="kendal", use="complete.obs"),2) # kendall correlation coef
-cor.plot(cor(socialPer[,24:65], method="kendal", use="complete.obs"), numbers= TRUE)
+round(cor(fullScale, method="kendal", use="complete.obs"),2) # kendall correlation coef
+cor.plot(cor(fullScale, method="kendal", use="complete.obs"), numbers= TRUE)
 
 # alpha
-cronbach  <- alpha(socialPer[,24:65])
+cronbach  <- alpha(fullScale)
 
 # EFA ----
 
+## All items ----
+
 ## KMO
-KMO(socialPer[,24:65])
+KMO(fullScale)
 
 # Barlett test of homogeneity
-bartlett.test(socialPer[,24:65])
+bartlett.test(fullScale)
 
 # Defining factors
-fa.parallel(socialPer[,24:65], fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components
-VSS(socialPer[,24:65], rotate="none") # VSS = 3 factors MAP = 4 components
+fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components
+VSS(fullScale, rotate="none") # VSS = 3 factors MAP = 4 components
 
-# Principal components analysis
-pca <- fa.poly(socialPer[,24:65], nfactors = 2, rotate = "none", fm="minres")
-print.psych(pca, digits=2, cut=0.3)
+# Factor analysis using polychoric correlations
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(pcaAll, digits=2, cut=0.3)
 
-# Diagrama
-fa.diagram(pca)
+## V1 - Items with good loadings ----
+# V1 - Version
+v1Scale  <- subset(fullScale, select = -c(10,20,24))
 
+# Factor analysis using polychoric correlations
+fav1 <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(fav1, digits=2, cut=0.3)
 
-#Confirmatoria
-cfa <- bfactor(socialPer[,24:65])
+# Diagram
+fa.diagram(fav1)
 
-# Fazer EFA com rotação e sem rotação - tirando os itens 10,20,24.
-# Ver itens que estão polarizando nas respostas pela escala
-# REvista de validação de São Francisco
+# Confirmatoria - Não implementado ainda.
+#cfa <- bfactor(socialPer[,24:65])
+# Revista de validação de São Francisco
 

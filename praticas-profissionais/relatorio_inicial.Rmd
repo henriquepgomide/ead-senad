@@ -26,7 +26,7 @@ library(car) # Function Recode
 library(psych) # Function Describe
 praticasPro  <- read.csv("praticasprofissionais_df.csv")
 ## Summing scales to remove NA's
-praticasPro$scaleSum  <- rowSums(praticasPro[,24:66])
+praticasPro$scaleSum  <- rowSums(praticasPro[,21:63])
 ## Subset completed observations and consented participation
 praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPro$estado=="Finalizadas" & !is.na(praticasPro$scaleSum))
 
@@ -90,26 +90,27 @@ cbind(round(prop.table(table(praticasPro$onde.lida.com)),2))
 ### Apresentação dos itens da escala - Não implementado ainda!
 
 ```{r}
-questions  <- read.csv("praticasprofissionais_questions.csv", col.names = "Itens", header=FALSE)
-print(questions[1:42,1], type="html", justify = "left" )
+#questions  <- read.csv("praticasprofissionais_questions.csv", col.names = "Itens", header=FALSE)
+#print(questions[1:42,1], type="html", justify = "left" )
 ```
 
 ### Itens
 
 ```{r}
-describe(praticasPro[,24:66], skew=FALSE)
+fullScale  <- praticasPro[,21:63] # Versão completa da escala
+describe(fullScale, skew=FALSE)
 ```
 
 
 ### Correlation Matrix
 ```{r fig.width=20, fig.height=22}
-cor.plot(cor(praticasPro[,24:66], method="kendal", use="complete.obs"), numbers= TRUE)
+cor.plot(cor(fullScale, method="kendal", use="complete.obs"), numbers= TRUE)
 ```
 
 
 ### Crobach's alfa
 ```{r}
-alpha(praticasPro[,24:66])
+alpha(fullScale)
 ```
 
 Análise Fatorial
@@ -117,29 +118,38 @@ Análise Fatorial
 
 ### KMO - Adequação da amostra
 ```{r}
-KMO(praticasPro[,24:66])
+KMO(fullScale)
 ```
 
 
 ### Esfericidade
 ```{r}
-bartlett.test(praticasPro[,24:66])
+bartlett.test(fullScale)
 ```
 
 ### Análise paralela
 ```{r fig.width=10, fig.height=11}
-fa.parallel(praticasPro[,24:66], fm="minres", fa="both", ylabel="Eigenvalues") # yields 3 components and 4 factors
+fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 3 components and 4 factors
 ```
 
 ### EFA - Principal component analysis
 
+### Todos os itens
+
 ```{r}
-pca <- fa.poly(praticasPro[,24:66], nfactors = 4, rotate = "oblimin", fm="minres")
-print.psych(pca, digits=2, cut=0.3)
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(faAll, digits=2, cut=0.3)
+```
+
+### Versão com itens com boas cargas fatoriais
+```{r}
+v1Scale  <- subset(fullScale, select = -c(3,8,15,31,36,41)) # Criação da escala com itens de cargas fatoriais boas
+faAll <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm="minres")
+print.psych(faAll, digits=2, cut=0.3)
 ```
 
 #### Diagrama com fatores
 ```{r fig.width=20, fig.height=22}
-fa.diagram(pca)
+fa.diagram(faAll)
 ```
 

@@ -39,7 +39,7 @@ library(psych)  # Function Describe
 ```r
 praticasPro <- read.csv("praticasprofissionais_df.csv")
 ## Summing scales to remove NA's
-praticasPro$scaleSum <- rowSums(praticasPro[, 24:66])
+praticasPro$scaleSum <- rowSums(praticasPro[, 21:63])
 ## Subset completed observations and consented participation
 praticasPro <- subset(praticasPro, subset = praticasPro$termo == "Sim" & praticasPro$estado == 
     "Finalizadas" & !is.na(praticasPro$scaleSum))
@@ -129,7 +129,7 @@ praticasPro$timeWorking <- as.numeric(gsub("anos(.*)", "", timeWorking))
 ```
 
 ```
-## Warning: NAs introduced by coercion
+## Warning: NAs introduzidos por coerção
 ```
 
 ```r
@@ -204,25 +204,9 @@ cbind(round(prop.table(table(praticasPro$onde.lida.com)), 2))
 
 
 ```r
-questions <- read.csv("praticasprofissionais_questions.csv", col.names = "Itens", 
-    header = FALSE)
-```
-
-```
-## Warning: cannot open file 'praticasprofissionais_questions.csv': No such
-## file or directory
-```
-
-```
-## Error: cannot open the connection
-```
-
-```r
-print(questions[1:42, 1], type = "html", justify = "left")
-```
-
-```
-## Error: object 'questions' not found
+# questions <- read.csv('praticasprofissionais_questions.csv', col.names =
+# 'Itens', header=FALSE) print(questions[1:42,1], type='html', justify =
+# 'left' )
 ```
 
 
@@ -230,7 +214,8 @@ print(questions[1:42, 1], type = "html", justify = "left")
 
 
 ```r
-describe(praticasPro[, 24:66], skew = FALSE)
+fullScale <- praticasPro[, 21:63]  # Versão completa da escala
+describe(fullScale, skew = FALSE)
 ```
 
 ```
@@ -285,8 +270,7 @@ describe(praticasPro[, 24:66], skew = FALSE)
 ### Correlation Matrix
 
 ```r
-cor.plot(cor(praticasPro[, 24:66], method = "kendal", use = "complete.obs"), 
-    numbers = TRUE)
+cor.plot(cor(fullScale, method = "kendal", use = "complete.obs"), numbers = TRUE)
 ```
 
 ![plot of chunk unnamed-chunk-13](figure/unnamed-chunk-13.png) 
@@ -296,7 +280,7 @@ cor.plot(cor(praticasPro[, 24:66], method = "kendal", use = "complete.obs"),
 ### Crobach's alfa
 
 ```r
-alpha(praticasPro[, 24:66])
+alpha(fullScale)
 ```
 
 ```
@@ -307,7 +291,7 @@ alpha(praticasPro[, 24:66])
 ```
 ## 
 ## Reliability analysis   
-## Call: alpha(x = praticasPro[, 24:66])
+## Call: alpha(x = fullScale)
 ## 
 ##   raw_alpha std.alpha G6(smc) average_r S/N   ase mean   sd
 ##        0.9      0.91    0.95      0.19  10 0.015  3.7 0.38
@@ -461,12 +445,12 @@ Análise Fatorial
 ### KMO - Adequação da amostra
 
 ```r
-KMO(praticasPro[, 24:66])
+KMO(fullScale)
 ```
 
 ```
 ## Kaiser-Meyer-Olkin factor adequacy
-## Call: KMO(r = praticasPro[, 24:66])
+## Call: KMO(r = fullScale)
 ## Overall MSA =  0.81
 ## MSA for each item = 
 ## pp001 pp002 pp003 pp004 pp005 pp006 pp007 pp008 pp009 pp010 pp011 pp012 
@@ -484,14 +468,14 @@ KMO(praticasPro[, 24:66])
 ### Esfericidade
 
 ```r
-bartlett.test(praticasPro[, 24:66])
+bartlett.test(fullScale)
 ```
 
 ```
 ## 
 ## 	Bartlett test of homogeneity of variances
 ## 
-## data:  praticasPro[, 24:66]
+## data:  fullScale
 ## Bartlett's K-squared = 300.9, df = 42, p-value < 2.2e-16
 ```
 
@@ -499,7 +483,7 @@ bartlett.test(praticasPro[, 24:66])
 ### Análise paralela
 
 ```r
-fa.parallel(praticasPro[, 24:66], fm = "minres", fa = "both", ylabel = "Eigenvalues")  # yields 3 components and 4 factors
+fa.parallel(fullScale, fm = "minres", fa = "both", ylabel = "Eigenvalues")  # yields 3 components and 4 factors
 ```
 
 ```
@@ -516,9 +500,11 @@ fa.parallel(praticasPro[, 24:66], fm = "minres", fa = "both", ylabel = "Eigenval
 
 ### EFA - Principal component analysis
 
+### Todos os itens
+
 
 ```r
-pca <- fa.poly(praticasPro[, 24:66], nfactors = 4, rotate = "oblimin", fm = "minres")
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm = "minres")
 ```
 
 ```
@@ -527,7 +513,6 @@ pca <- fa.poly(praticasPro[, 24:66], nfactors = 4, rotate = "oblimin", fm = "min
 ```
 
 ```
-## Warning: NaNs produced
 ## Warning: Matrix was not positive definite, smoothing was done
 ```
 
@@ -536,103 +521,198 @@ pca <- fa.poly(praticasPro[, 24:66], nfactors = 4, rotate = "oblimin", fm = "min
 ```
 
 ```r
-print.psych(pca, digits = 2, cut = 0.3)
+print.psych(faAll, digits = 2, cut = 0.3)
 ```
 
 ```
 ## Factor Analysis using method =  minres
-## Call: fa.poly(x = praticasPro[, 24:66], nfactors = 4, rotate = "oblimin", 
-##     fm = "minres")
+## Call: fa.poly(x = fullScale, nfactors = 2, rotate = "oblimin", fm = "minres")
 ## Standardized loadings (pattern matrix) based upon correlation matrix
-##         MR2   MR1   MR3   MR4    h2   u2 com
-## pp001                    0.40 0.365 0.63 2.1
-## pp002        0.58             0.438 0.56 1.2
-## pp003        0.46             0.267 0.73 2.7
-## pp004        0.77             0.600 0.40 1.1
-## pp005        0.65             0.596 0.40 1.2
-## pp006        0.77             0.574 0.43 1.2
-## pp007        0.78             0.686 0.31 1.1
-## pp008                    0.69 0.443 0.56 1.4
-## pp009        0.71             0.493 0.51 1.0
-## pp010                    0.64 0.516 0.48 1.5
-## pp011              0.78       0.601 0.40 1.0
-## pp012  0.60        0.39       0.649 0.35 1.7
-## pp013  0.47              0.41 0.381 0.62 2.5
-## pp014  0.77                   0.630 0.37 1.0
-## pp015  0.32  0.31             0.257 0.74 2.1
-## pp016        0.67             0.601 0.40 1.2
-## pp017              0.63       0.489 0.51 1.2
-## pp018  0.43              0.31 0.317 0.68 2.4
-## pp019  0.79                   0.591 0.41 1.2
-## pp020        0.75             0.714 0.29 1.2
-## pp021                    0.67 0.545 0.45 1.3
-## pp022  0.74                   0.592 0.41 1.1
-## pp023  0.54                   0.483 0.52 1.4
-## pp024  0.83                   0.712 0.29 1.0
-## pp025  0.77                   0.550 0.45 1.1
-## pp026  0.31  0.42             0.461 0.54 2.8
-## pp027       -0.43        0.56 0.633 0.37 2.1
-## pp028                    0.38 0.241 0.76 1.7
-## pp029              0.78       0.620 0.38 1.2
-## pp030  0.73                   0.605 0.40 1.0
-## pp031             -0.43       0.335 0.66 1.8
-## pp032       -0.46             0.441 0.56 2.3
-## pp033  0.72                   0.605 0.39 1.1
-## pp034  0.39                   0.450 0.55 2.7
-## pp035  0.68                   0.573 0.43 1.2
-## pp036                         0.078 0.92 1.5
-## pp037              0.56       0.517 0.48 1.5
-## pp038                    0.63 0.638 0.36 1.5
-## pp039                    0.53 0.535 0.46 1.7
-## pp040             -0.54  0.31 0.695 0.31 2.2
-## pp041        0.32  0.32       0.203 0.80 2.5
-## pp042             -0.61  0.34 0.691 0.31 1.8
-## pp043        0.67             0.508 0.49 1.3
+##         MR1   MR2    h2   u2 com
+## pp001 -0.55       0.318 0.68 1.0
+## pp002  0.64       0.412 0.59 1.0
+## pp003             0.046 0.95 1.1
+## pp004  0.70       0.492 0.51 1.0
+## pp005  0.72       0.577 0.42 1.0
+## pp006  0.58       0.367 0.63 1.0
+## pp007  0.76       0.600 0.40 1.0
+## pp008             0.039 0.96 1.2
+## pp009  0.59       0.374 0.63 1.0
+## pp010 -0.66  0.30 0.378 0.62 1.4
+## pp011        0.51 0.236 0.76 1.1
+## pp012        0.82 0.636 0.36 1.0
+## pp013        0.47 0.207 0.79 1.0
+## pp014        0.75 0.561 0.44 1.0
+## pp015        0.33 0.224 0.78 1.8
+## pp016  0.75       0.588 0.41 1.0
+## pp017        0.40 0.251 0.75 1.4
+## pp018        0.57 0.278 0.72 1.4
+## pp019        0.74 0.477 0.52 1.1
+## pp020  0.71       0.627 0.37 1.1
+## pp021 -0.42       0.244 0.76 1.2
+## pp022        0.65 0.491 0.51 1.1
+## pp023        0.57 0.472 0.53 1.3
+## pp024        0.75 0.608 0.39 1.0
+## pp025        0.64 0.402 0.60 1.0
+## pp026  0.56       0.407 0.59 1.2
+## pp027 -0.79       0.552 0.45 1.1
+## pp028 -0.45       0.194 0.81 1.0
+## pp029        0.57 0.280 0.72 1.3
+## pp030        0.74 0.565 0.43 1.0
+## pp031 -0.31       0.231 0.77 2.0
+## pp032 -0.62       0.399 0.60 1.0
+## pp033        0.69 0.534 0.47 1.0
+## pp034        0.53 0.430 0.57 1.4
+## pp035        0.76 0.562 0.44 1.0
+## pp036             0.046 0.95 1.2
+## pp037        0.55 0.383 0.62 1.2
+## pp038 -0.55       0.427 0.57 1.3
+## pp039 -0.60       0.439 0.56 1.1
+## pp040 -0.32 -0.57 0.555 0.45 1.6
+## pp041             0.100 0.90 1.1
+## pp042 -0.33 -0.50 0.480 0.52 1.7
+## pp043  0.68       0.440 0.56 1.0
 ## 
-##                        MR2  MR1  MR3  MR4
-## SS loadings           6.96 6.97 4.06 3.93
-## Proportion Var        0.16 0.16 0.09 0.09
-## Cumulative Var        0.16 0.32 0.42 0.51
-## Proportion Explained  0.32 0.32 0.19 0.18
-## Cumulative Proportion 0.32 0.64 0.82 1.00
+##                        MR1  MR2
+## SS loadings           8.56 8.37
+## Proportion Var        0.20 0.19
+## Cumulative Var        0.20 0.39
+## Proportion Explained  0.51 0.49
+## Cumulative Proportion 0.51 1.00
 ## 
 ##  With factor correlations of 
-##       MR2   MR1   MR3   MR4
-## MR2  1.00  0.30  0.33 -0.19
-## MR1  0.30  1.00  0.18 -0.30
-## MR3  0.33  0.18  1.00 -0.09
-## MR4 -0.19 -0.30 -0.09  1.00
+##      MR1  MR2
+## MR1 1.00 0.38
+## MR2 0.38 1.00
 ## 
-## Mean item complexity =  1.6
-## Test of the hypothesis that 4 factors are sufficient.
+## Mean item complexity =  1.2
+## Test of the hypothesis that 2 factors are sufficient.
 ## 
-## The degrees of freedom for the null model are  903  and the objective function was  101.8 with Chi Square of  12193
-## The degrees of freedom for the model are 737  and the objective function was  82.27 
+## The degrees of freedom for the null model are  903  and the objective function was  101.8 with Chi Square of  12195
+## The degrees of freedom for the model are 818  and the objective function was  85.94 
 ## 
-## The root mean square of the residuals (RMSR) is  0.07 
-## The df corrected root mean square of the residuals is  0.08 
+## The root mean square of the residuals (RMSR) is  0.09 
+## The df corrected root mean square of the residuals is  0.1 
 ## 
-## The harmonic number of observations is  136 with the empirical chi square  1241  with prob <  2.9e-28 
-## The total number of observations was  136  with MLE Chi Square =  9639  with prob <  0 
+## The harmonic number of observations is  136 with the empirical chi square  2170  with prob <  7e-123 
+## The total number of observations was  136  with MLE Chi Square =  10184  with prob <  0 
 ## 
-## Tucker Lewis Index of factoring reliability =  0.01
-## RMSEA index =  0.323  and the 90 % confidence intervals are  0.293 0.303
-## BIC =  6018
-## Fit based upon off diagonal values = 0.94
+## Tucker Lewis Index of factoring reliability =  0.073
+## RMSEA index =  0.312  and the 90 % confidence intervals are  0.285 0.295
+## BIC =  6165
+## Fit based upon off diagonal values = 0.9
 ## Measures of factor score adequacy             
-##                                                MR2 MR1 MR3 MR4
-## Correlation of scores with factors               1   1   1   1
-## Multiple R square of scores with factors         1   1   1   1
-## Minimum correlation of possible factor scores    1   1   1   1
+##                                                MR1 MR2
+## Correlation of scores with factors               1   1
+## Multiple R square of scores with factors         1   1
+## Minimum correlation of possible factor scores    1   1
+```
+
+
+### Versão com itens com boas cargas fatoriais
+
+```r
+v1Scale <- subset(fullScale, select = -c(3, 8, 15, 31, 36, 41))  # Criação da escala com itens de cargas fatoriais boas
+faAll <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm = "minres")
+```
+
+```
+## The items do not have an equal number of response alternatives, global set to FALSE
+```
+
+```
+## Warning: Matrix was not positive definite, smoothing was done
+```
+
+```r
+print.psych(faAll, digits = 2, cut = 0.3)
+```
+
+```
+## Factor Analysis using method =  minres
+## Call: fa.poly(x = v1Scale, nfactors = 2, rotate = "oblimin", fm = "minres")
+## Standardized loadings (pattern matrix) based upon correlation matrix
+##         MR2   MR1   h2   u2 com
+## pp001 -0.54       0.31 0.69 1.0
+## pp002  0.65       0.43 0.57 1.0
+## pp004  0.69       0.48 0.52 1.0
+## pp005  0.73       0.60 0.40 1.0
+## pp006  0.59       0.37 0.63 1.0
+## pp007  0.77       0.61 0.39 1.0
+## pp009  0.61       0.39 0.61 1.0
+## pp010 -0.66       0.38 0.62 1.4
+## pp011        0.52 0.24 0.76 1.1
+## pp012        0.81 0.63 0.37 1.0
+## pp013        0.46 0.20 0.80 1.0
+## pp014        0.74 0.55 0.45 1.0
+## pp016  0.74       0.58 0.42 1.0
+## pp017        0.41 0.25 0.75 1.3
+## pp018        0.56 0.27 0.73 1.4
+## pp019        0.74 0.48 0.52 1.1
+## pp020  0.71       0.63 0.37 1.1
+## pp021 -0.41       0.24 0.76 1.3
+## pp022        0.66 0.50 0.50 1.1
+## pp023        0.57 0.47 0.53 1.3
+## pp024        0.76 0.63 0.37 1.0
+## pp025        0.65 0.41 0.59 1.0
+## pp026  0.57       0.42 0.58 1.2
+## pp027 -0.80       0.56 0.44 1.1
+## pp028 -0.46       0.21 0.79 1.0
+## pp029        0.57 0.28 0.72 1.3
+## pp030        0.75 0.58 0.42 1.0
+## pp032 -0.62       0.40 0.60 1.0
+## pp033        0.70 0.55 0.45 1.0
+## pp034        0.54 0.44 0.56 1.4
+## pp035        0.76 0.56 0.44 1.0
+## pp037        0.55 0.38 0.62 1.1
+## pp038 -0.54       0.42 0.58 1.3
+## pp039 -0.60       0.43 0.57 1.1
+## pp040       -0.58 0.55 0.45 1.5
+## pp042 -0.31 -0.52 0.48 0.52 1.6
+## pp043  0.67       0.43 0.57 1.0
+## 
+##                        MR2  MR1
+## SS loadings           8.18 8.14
+## Proportion Var        0.22 0.22
+## Cumulative Var        0.22 0.44
+## Proportion Explained  0.50 0.50
+## Cumulative Proportion 0.50 1.00
+## 
+##  With factor correlations of 
+##      MR2  MR1
+## MR2 1.00 0.38
+## MR1 0.38 1.00
+## 
+## Mean item complexity =  1.1
+## Test of the hypothesis that 2 factors are sufficient.
+## 
+## The degrees of freedom for the null model are  666  and the objective function was  91.45 with Chi Square of  11142
+## The degrees of freedom for the model are 593  and the objective function was  76.18 
+## 
+## The root mean square of the residuals (RMSR) is  0.09 
+## The df corrected root mean square of the residuals is  0.1 
+## 
+## The harmonic number of observations is  136 with the empirical chi square  1580  with prob <  9.8e-91 
+## The total number of observations was  136  with MLE Chi Square =  9180  with prob <  0 
+## 
+## Tucker Lewis Index of factoring reliability =  0.069
+## RMSEA index =  0.348  and the 90 % confidence intervals are  0.32 0.332
+## BIC =  6266
+## Fit based upon off diagonal values = 0.92
+## Measures of factor score adequacy             
+##                                                MR2 MR1
+## Correlation of scores with factors               1   1
+## Multiple R square of scores with factors         1   1
+## Minimum correlation of possible factor scores    1   1
 ```
 
 
 #### Diagrama com fatores
 
 ```r
-fa.diagram(pca)
+fa.diagram(faAll)
 ```
 
-![plot of chunk unnamed-chunk-19](figure/unnamed-chunk-19.png) 
+![plot of chunk unnamed-chunk-20](figure/unnamed-chunk-20.png) 
 
 
