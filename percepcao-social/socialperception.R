@@ -11,30 +11,30 @@ varnames  <- names(vars); rm(vars)
 ## Dataframe
 socialPer  <- read.csv("percepcaosocial.csv", col.names=varnames, na.strings=c(NA, "-")); rm(varnames)
 
+
 ## Recode Social Perception Scale 
-for (i in 30:71){
+for (i in 41:79){
   socialPer[,i]   <-  Recode(socialPer[,i], "'Concordo'=4 ; c('Concordo totalmente', 'Concordo Totalmente')=5 ; 'Discordo' = 2; c('Discordo totalmente','Discordo Totalmente') = 1;  'Nem discordo, nem concordo' = 3")                         
 }
 
 # Drop id variables
-socialPer  <- subset(socialPer, select = -c(1,2,3,6,11,12,13,72))
+socialPer  <- subset(socialPer, select = -c(1,2,3,6,11,12,13,14,72))
 write.csv(socialPer, "percepcaosocial_df.csv")
 
 # Questions
 questions  <- read.csv("percepcaosocial_questions.csv")
+questionsLabels  <- as.vector(questions[1:39,]); rm(questions)
 
 # Analysis----
-
 ## Import dataframe
 socialPer  <- read.csv("percepcaosocial_df.csv")
 ## Summing scales to remove NA's
-socialPer$scaleSum  <- rowSums(socialPer[,24:65])
+socialPer$scaleSum  <- rowSums(socialPer[,34:71])
 ## Subset completed observations and consented participation
 socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado=="Finalizadas" & !is.na(socialPer$scaleSum))
 
 # Demographics
 ## Age
-
 ### Clean data
 idade  <- as.character(socialPer$idade)
 idade[28]  <- "42"
@@ -83,7 +83,7 @@ table(socialPer$lida.com.outros)
 # Scale analysis ---
 
 # Full scale
-fullScale  <- socialPer[,24:65]
+fullScale  <- socialPer[,34:71]
 
 # descriptives
 describe(fullScale)
@@ -111,18 +111,10 @@ VSS(fullScale, rotate="none") # VSS = 3 factors MAP = 4 components
 
 # Factor analysis using polychoric correlations
 faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
-print.psych(pcaAll, digits=2, cut=0.3)
-
-## V1 - Items with good loadings ----
-# V1 - Version
-v1Scale  <- subset(fullScale, select = -c(10,20,24))
-
-# Factor analysis using polychoric correlations
-fav1 <- fa.poly(v1Scale, nfactors = 2, rotate = "oblimin", fm="minres")
-print.psych(fav1, digits=2, cut=0.3)
+print.psych(faAll, digits=2, cut=0.3)
 
 # Diagram
-fa.diagram(fav1)
+fa.diagram(faAll)
 
 # Confirmatoria - Não implementado ainda.
 #cfa <- bfactor(socialPer[,24:65])
