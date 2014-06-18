@@ -1,9 +1,9 @@
 # Libraries ----
 library(car) # Function Recode
 library(psych) # Function Describe
-library(mirt) 
-# Import data ----
+library(mirt)
 
+# Import data ----
 ## Var names
 vars  <- read.csv("percepcaosocial_labels.csv")
 varnames  <- names(vars); rm(vars)
@@ -116,7 +116,9 @@ print.psych(faAll, digits=2, cut=0.3)
 # Diagram
 fa.diagram(faAll)
 
-# Confirmatoria - Não implementado ainda.
-#cfa <- bfactor(socialPer[,24:65])
+
 # Revista de validação de São Francisco
+# a fazer -  Inverter itens da escala
+# Confirmatoria - Não implementado ainda.
+cfa <- bfactor(fullScale)
 

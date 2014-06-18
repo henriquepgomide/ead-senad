@@ -118,6 +118,8 @@ fa.diagram(faAll)
 ### Bifactor Model
 library(mirt)
 factors  <- c(2,2,2,2,2,2,2,2,1,1,1,1,2,1,1,1,2,2,1,1,1,1,2,2,2,1,1,2,1,1,1,1,2,2,1,1,2) # based on efa scores
+
+# Inverter itens para análise fatorial
 mbi  <- bfactor(fullScale, factors)
 summary(mbi)
 residuals(mbi)
