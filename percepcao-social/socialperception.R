@@ -1,7 +1,7 @@
 # Libraries ----
 library(car) # Function Recode
 library(psych) # Function Describe
-library(mirt)
+library(mirt) # Function mirt IRT 
 
 # Import data ----
 ## Var names
@@ -88,26 +88,20 @@ fullScale  <- socialPer[,34:71]
 # descriptives
 describe(fullScale)
 
-# correlations
-round(cor(fullScale, method="kendal", use="complete.obs"),2) # kendall correlation coef
-cor.plot(cor(fullScale, method="kendal", use="complete.obs"), numbers= TRUE)
-
 # alpha
-cronbach  <- alpha(fullScale)
+cronbach  <- alpha(fullScale) # Cronbach's alpha = .87
 
 # EFA ----
-
 ## All items ----
 
 ## KMO
-KMO(fullScale)
+KMO(fullScale) # KMO = .92
 
-# Barlett test of homogeneity
-bartlett.test(fullScale)
+# Barlett test of homogeneity # OK
+bartlett.test(fullScale) 
 
 # Defining factors
-fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 4 components
-VSS(fullScale, rotate="none") # VSS = 3 factors MAP = 4 components
+fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 2 factors
 
 # Factor analysis using polychoric correlations
 faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
@@ -115,6 +109,19 @@ print.psych(faAll, digits=2, cut=0.3)
 
 # Diagram
 fa.diagram(faAll)
+
+# RESULTADOS #
+# Sem fator  9, 13, 25, 32
+# Dois fatores e com cargas baixas  18, 36
+# MR1  : 1,2,3,4,5,6,7,8,10,15,17,20,22,30,
+# MR2  : 11,12,-14,16,-19,21,23,24,26,27,-28,-29,-31,-33,-34,-35, 37,38,39
+
+# Recode negative items
+for (i in c(14,19,28,29,31,33,34,35)){
+    fullScale[,i]   <-  Recode(fullScale[,i], "5=1 ; 4=2 ; 3 = 3; 2 = 4; 1 = 5; else = NA")                         
+}
+
+fullScale[1:5,c(31,33,34,35)]
 
 
 # Revista de validação de São Francisco

@@ -108,18 +108,34 @@ VSS(fullScale, rotate="none") # VSS = 2; MAP = 4 factors
 
 # Factor Analysis using polychoric correlations
 faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
-print.psych(faAll, digits=2, cut= .3)
+faAll$fa
 
 # Diagram
 fa.diagram(faAll)
+
+
+# Items per factor #
+# MR1  : 9,10,11,12,14,15,16,19,20,21,22,26,27,29,30,31,32,-35,-36
+# MR2  : -1,2,3,4,5,6,7,-8,13,17,-18,23,-24,-25,-28,-33,-34,37
+
+# Recode negative items
+for (i in c(1,8,18,24,25,28,33,34,35,36)){
+  fullScale[,i]   <-  Recode(fullScale[,i], "5=1 ; 4=2 ; 3 = 3; 2 = 4; 1 = 5; else = NA")                         
+}
+
+# Factor Analysis using polychoric correlations
+faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
+faAll$fa
+
+# Diagram
+fa.diagram(faAll)
+
 
 # CFA ---- Not implemented yet.
 ### Exploratory factor analysis
 ### Bifactor Model
 library(mirt)
 factors  <- c(2,2,2,2,2,2,2,2,1,1,1,1,2,1,1,1,2,2,1,1,1,1,2,2,2,1,1,2,1,1,1,1,2,2,1,1,2) # based on efa scores
-
-# Inverter itens para análise fatorial
 mbi  <- bfactor(fullScale, factors)
 summary(mbi)
 residuals(mbi)
