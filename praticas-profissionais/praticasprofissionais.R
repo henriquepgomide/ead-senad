@@ -139,3 +139,6 @@ factors  <- c(2,2,2,2,2,2,2,2,1,1,1,1,2,1,1,1,2,2,1,1,1,1,2,2,2,1,1,2,1,1,1,1,2,
 mbi  <- bfactor(fullScale, factors)
 summary(mbi)
 residuals(mbi)
+
+# inverter itens 33 e 34
+# manter nomes das questões de acordo com a escala original

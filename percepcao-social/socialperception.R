@@ -11,14 +11,13 @@ varnames  <- names(vars); rm(vars)
 ## Dataframe
 socialPer  <- read.csv("percepcaosocial.csv", col.names=varnames, na.strings=c(NA, "-")); rm(varnames)
 
-
 ## Recode Social Perception Scale 
-for (i in 41:79){
+for (i in 40:78){
   socialPer[,i]   <-  Recode(socialPer[,i], "'Concordo'=4 ; c('Concordo totalmente', 'Concordo Totalmente')=5 ; 'Discordo' = 2; c('Discordo totalmente','Discordo Totalmente') = 1;  'Nem discordo, nem concordo' = 3")                         
 }
 
 # Drop id variables
-socialPer  <- subset(socialPer, select = -c(1,2,3,6,11,12,13,14,72))
+socialPer  <- subset(socialPer, select = -c(1,2,3,4,5,6,11,12,13))
 write.csv(socialPer, "percepcaosocial_df.csv")
 
 # Questions
@@ -29,7 +28,7 @@ questionsLabels  <- as.vector(questions[1:39,]); rm(questions)
 ## Import dataframe
 socialPer  <- read.csv("percepcaosocial_df.csv")
 ## Summing scales to remove NA's
-socialPer$scaleSum  <- rowSums(socialPer[,34:71])
+socialPer$scaleSum  <- rowSums(socialPer[,32:70])
 ## Subset completed observations and consented participation
 socialPer  <- subset(socialPer, subset=socialPer$termo=="Sim" & socialPer$estado=="Finalizadas" & !is.na(socialPer$scaleSum))
 
@@ -83,7 +82,7 @@ table(socialPer$lida.com.outros)
 # Scale analysis ---
 
 # Full scale
-fullScale  <- socialPer[,34:71]
+fullScale  <- socialPer[,32:70]
 
 # descriptives
 describe(fullScale)
@@ -106,6 +105,7 @@ fa.parallel(fullScale, fm="minres", fa="both", ylabel="Eigenvalues") # yields 2 
 # Factor analysis using polychoric correlations
 faAll <- fa.poly(fullScale, nfactors = 2, rotate = "oblimin", fm="minres")
 print.psych(faAll, digits=2, cut=0.3)
+faAll
 
 # Diagram
 fa.diagram(faAll)
