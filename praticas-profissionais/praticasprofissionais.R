@@ -37,7 +37,6 @@ praticasPro  <- subset(praticasPro, subset=praticasPro$termo=="Sim" & praticasPr
 
 ### Clean data
 idade  <- as.character(praticasPro$idade)
-idade[9]  <- "35"; idade[44] <- "29"; idade[69]  <- "31"; idade[111]   <-  42;
 praticasPro$age  <- as.numeric(gsub("anos(.*)", "", idade))
 
 ### Descriptives
